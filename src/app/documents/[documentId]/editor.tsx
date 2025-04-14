@@ -8,14 +8,46 @@ import TableCell from "@tiptap/extension-table-cell";
 import TableHeader from "@tiptap/extension-table-header";
 import TableRow from "@tiptap/extension-table-row";
 import Image from '@tiptap/extension-image'
-import ImageResize from "tiptap-extension-resize-image"
+import ImageResize from "tiptap-extension-resize-image";
+import Underline from "@tiptap/extension-underline"
+import FontFamily from "@tiptap/extension-font-family"
+import TextStyle from "@tiptap/extension-text-style";
+import { useEditorStore } from "@/app/store/use-editor-store";
+
+
 export const Editor = () => {
+const {setEditor}=useEditorStore()
+
   const editor = useEditor({
+    onCreate({editor}) {
+        setEditor(editor)
+    },
+    onDestroy() {
+        setEditor(null)
+    },
+    onUpdate({editor}) {
+        setEditor(editor)
+    },onSelectionUpdate({editor}) {
+        setEditor(editor)
+    },
+    onTransaction({editor}){
+      setEditor(editor)
+    },
+    onFocus({editor}) {
+      setEditor(editor)
+    },
+    onBlur({editor}){
+      setEditor(editor)
+    },
+    onContentError({editor}) {
+        setEditor(editor)
+    },
     editorProps: {
       attributes: {
         style: "padding-left: 56px;padding-right:56px",
         class:
           "focus:outline-none print:border-0 bg-white border-[#c7c7c7] border flex flex-col min-h-[1054px] w-[816px] pt-10 pr-14 pb-10 cursor-text",
+          
       },
     },
     extensions: [
@@ -30,7 +62,9 @@ export const Editor = () => {
       TableRow,
       TableHeader,
       TableCell,
-      Image,ImageResize
+      Image,ImageResize,
+      Underline,
+      FontFamily,TextStyle
     ],
     content: ` <table>
           <tbody>
