@@ -7,12 +7,21 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuTrigger,
+  
 } from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+
 import { type Level } from "@tiptap/extension-heading";
+import { type ColorResult,CompactPicker } from "react-color";
+import { useState } from "react";
+
 import {
   BoldIcon,
   ChevronDownIcon,
+  HighlighterIcon,
   ItalicIcon,
+  Link2Icon,
   ListTodoIcon,
   LucideIcon,
   MessageSquarePlusIcon,
@@ -35,6 +44,92 @@ interface SectionProps {
   onClick: () => void;
   icon: LucideIcon;
 }
+
+
+const LinkButton=()=>{
+  const {editor} =useEditorStore()
+
+  const [value,setValue]=useState("")
+
+  const onChange=(href:string)=>{
+    editor?.chain().focus().extendMarkRange("link").setLink({href}).run()
+    setValue("")
+  }
+
+  return <DropdownMenu onOpenChange={(open)=>{
+    if(open){
+      setValue(editor?.getAttributes("link").href)
+    }
+  }}>
+  <DropdownMenuTrigger asChild>
+    <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
+      <Link2Icon/>
+    </button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent className="p-2.5 flex items-center gap-x-2">
+ <Input
+ placeholder="Paste your link"
+ value={value}
+ onChange={(e)=>setValue(e.target.value)}
+  
+ 
+ />
+ <Button onClick={()=>onChange(value)}>Apply</Button>  
+ 
+  </DropdownMenuContent>
+</DropdownMenu>
+
+}
+
+const HighlightColorButton = () => {
+  const { editor } = useEditorStore();
+
+  const value = editor?.getAttributes("highlight").color || "#000000";
+
+  const onChange = (color: ColorResult) => {
+    editor?.chain().focus().setHighlight({color:color.hex}).run();
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
+          <HighlighterIcon className="size-4"/>
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="p-0">
+       
+        <CompactPicker color={value} onChange={onChange} />
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
+
+
+const TextColorButton = () => {
+  const { editor } = useEditorStore();
+
+  const value = editor?.getAttributes("textStyle").color || "#000000";
+
+  const onChange = (color: ColorResult) => {
+    editor?.chain().focus().setColor(color.hex).run();
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="h-7 min-w-7 shrink-0 flex flex-col items-center justify-center rounded-sm hover:bg-neutral-200/80 px-1.5 overflow-hidden text-sm">
+          <span className="text-xs">A</span>
+          <div className="h-0.5 w-full" style={{ backgroundColor: value }} />
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="p-0">
+        {/* <CirclePicker color={value} onChange={onChange} /> */}
+        <CompactPicker color={value} onChange={onChange} />
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+};
 
 const HeadingLevelButton = () => {
   const { editor } = useEditorStore();
@@ -105,11 +200,15 @@ const HeadingLevelButton = () => {
                 (editor?.isActive("heading", { level: value }) &&
                   "bg-neutral-200/80")
             )}
-            onClick={()=>{
+            onClick={() => {
               if (value === 0) {
                 editor?.chain().focus().setParagraph().run();
               } else {
-                editor?.chain().focus().toggleHeading({ level: value as unknown as Level }).run();
+                editor
+                  ?.chain()
+                  .focus()
+                  .toggleHeading({ level: value as unknown as Level })
+                  .run();
               }
             }}
           >
@@ -269,7 +368,7 @@ export const Toolbar = () => {
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
       <FontFamilyButton />
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
-      <HeadingLevelButton/>
+      <HeadingLevelButton />
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
       {/* Font Size */}
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
@@ -282,10 +381,10 @@ export const Toolbar = () => {
         />
       ))}
 
-      {/* Text Color */}
-      {/* HighlightColor */}
+      <TextColorButton />
+     <HighlightColorButton/>
       <Separator orientation="vertical" className="h-6 bg-neutral-300" />
-      {/* Link */}
+      <LinkButton/>
       {/* Image */}
       {/* Align */}
       {/* Line Height */}

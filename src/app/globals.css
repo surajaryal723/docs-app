@@ -210,4 +210,11 @@ body {
         cursor: ew-resize;
         cursor: col-resize;
     }
+    a {
+        @apply text-blue-600;
+        cursor: pointer;
+        &:hover {
+            @apply underline;
+        }
+    }
 }
