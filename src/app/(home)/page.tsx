@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { Navbar } from "./navbar"
+import { TemplateGallery } from "./template-gallery"
+
 
 export default function Home(){
   return <div className="min-h-screen flex flex-col">
@@ -8,9 +10,7 @@ export default function Home(){
       <Navbar/>
     </div>
     <div className="mt-16">
-    <h1 className="text-4xl">Hello</h1>
-    <Button variant={"destructive"} size={"lg"} className="">Click Me</Button>
-    <Link href={"/documents/123"}>Document</Link>
+    <TemplateGallery/>
     </div>
   </div>
 }

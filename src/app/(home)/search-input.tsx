@@ -58,7 +58,7 @@ export const SearchInput = () => {
           </Button>
         )}
       </form>
-      Search Input
+      
     </div>
   );
 };
