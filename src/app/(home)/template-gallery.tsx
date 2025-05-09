@@ -27,7 +27,7 @@ const onTemplateClick = (title:string,initialContent:string)=>{
     router.push(`/documents/${documentId}`)
   })
   .finally(()=>{
-    isCreating(false)
+    setIsCreating(false)
   })
 }
 
